@@ -1,36 +1,40 @@
-import { useState } from 'react'
+import { useActionState, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
-  const[data, setData]= useState(["sayyam", "gaurav", "manish"])
-  const[datadetails, setDataDetails]= useState([{Name:"sayyam", age:"23"},{Name:"gaurav", age:"25"},{Name:"manish", age:"27"}])
-const handleName =(name)=>{
-  data[data.length-1] = name
-  console.log(data)
-  setData([...data])
-}
-const handleAge =(name)=>{
-  datadetails[datadetails.length-1].age = name
-  console.log(datadetails)
-  setDataDetails([...datadetails])
-}
+  const handleSubmit = async(previousData, formData)=>{
+    let name=formData.get('name');
+    let password=formData.get('password');
+    await new Promise(res=>setTimeout(res, 2000))
+    console.log("handleSubmit", name, password )
+    if(name && password){
+      return{message:"data submitted", name, password}
+    }
+    else{
+      return{error:"data not submited", name, password}
+    }
+  }
+ const[data, action, pending]=useActionState(handleSubmit, undefined)
   return (
-    <>{
-     data.map((item,index)=>(
-      <h3 key={index}>{item}</h3>
-     ))
-    }
-    <input type="text" onChange={(e)=>handleName(e.target.value)} />
-    <hr>
-    </hr>
-    <input type="text" onChange={(e)=>handleAge(e.target.value)} />
-{
-     datadetails.map((item,index)=>(
-      <h3 key={index}>{item.Name},{item.age}</h3>
-     ))
-    }
+    <>
+  <form action={action}>
+    <input type="text" placeholder='enter name' name='name'/>
+    <br></br>
+    <br></br>
+    <input type="password" placeholder='enter password' name='password'/>
+    <br></br>
+    <br></br>
+<button disabled={pending}>Submit Data</button>
+  </form>
+  {
+    data?.error && <span>{data?.error}</span>
+  }
+  {
+    data?.message && <span>{data?.message}</span>
+  }
+<h3>Name:{data?.name}</h3>
     </>
   )
 }
