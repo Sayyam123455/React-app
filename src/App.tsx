@@ -1,28 +1,25 @@
 import { useActionState, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
-import College from './College';
-import { subjectComponent } from "./ContextComponent";
+// import College from './College';
+import useToggle from './useToggle';
+// import { subjectComponent } from "./ContextComponent";
 // import './App.css'
 
 function App() {
- const [subject, setSubject]=useState("english")
+const [value, toggleExp]= useToggle(true)
   return (
     <>
-    <subjectComponent.Provider value={subject}>
-    <select onChange={(event)=>setSubject(event.target.value)}>
-      <option value="">Select Option</option>
-      <option value="Maths">Maths</option>
-      <option value="Science">Science</option>
-      <option value="history">history</option>
-    </select>
-    
- <div style={{background:"red", padding:20}}>
-  <h1>content api</h1>
-   <College />
-   
- </div>
-</subjectComponent.Provider>
+   <div>
+    <button onClick={toggleExp}>Toggle Button</button>
+    <button onClick={()=>toggleExp(false)}>Hide Button</button>
+    <button onClick={()=>toggleExp(true)}>Show Button</button>
+
+
+    {
+      value?<h1>Heading1 in js</h1>:null
+      }
+   </div>
     </>
   )
 }
